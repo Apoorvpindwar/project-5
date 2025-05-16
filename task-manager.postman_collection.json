@@ -1,0 +1,201 @@
+{
+  "info": {
+    "_postman_id": "1234567-89ab-cdef-0123-456789abcdef",
+    "name": "Task Manager API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Sign In with Magic Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"options\": {\n    \"emailRedirectTo\": \"http://localhost:5173\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/magiclink",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "magiclink"]
+            }
+          }
+        },
+        {
+          "name": "Sign Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ACCESS_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/logout",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "Get All Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ACCESS_TOKEN}}"
+              },
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}"
+              }
+            ],
+            "url": {
+              "raw": "{{SUPABASE_URL}}/rest/v1/tasks?select=*",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["rest", "v1", "tasks"],
+              "query": [
+                {
+                  "key": "select",
+                  "value": "*"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ACCESS_TOKEN}}"
+              },
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=minimal"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sample Task\",\n  \"description\": \"This is a sample task\",\n  \"due_date\": \"2025-05-20T00:00:00Z\",\n  \"completed\": false\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/rest/v1/tasks",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["rest", "v1", "tasks"]
+            }
+          }
+        },
+        {
+          "name": "Update Task",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ACCESS_TOKEN}}"
+              },
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=minimal"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Task\",\n  \"description\": \"This task has been updated\",\n  \"completed\": true\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/rest/v1/tasks?id=eq.{{TASK_ID}}",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["rest", "v1", "tasks"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{TASK_ID}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ACCESS_TOKEN}}"
+              },
+              {
+                "key": "apikey",
+                "value": "{{ANON_KEY}}"
+              }
+            ],
+            "url": {
+              "raw": "{{SUPABASE_URL}}/rest/v1/tasks?id=eq.{{TASK_ID}}",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["rest", "v1", "tasks"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{TASK_ID}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "SUPABASE_URL",
+      "value": "https://vqlvrwtkizgeksozgysa.supabase.co"
+    },
+    {
+      "key": "ANON_KEY",
+      "value": "your_anon_key_here"
+    },
+    {
+      "key": "ACCESS_TOKEN",
+      "value": "your_access_token_here"
+    },
+    {
+      "key": "TASK_ID",
+      "value": "your_task_id_here"
+    }
+  ]
+} 

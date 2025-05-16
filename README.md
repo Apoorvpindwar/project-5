@@ -2,104 +2,107 @@
 
 A modern, responsive task management application built with React, TypeScript, and Supabase. The application features a beautiful UI with Tailwind CSS, real-time updates, and secure authentication.
 
-![Task Manager Screenshot]
+## 🌐 Live Demo
+[Task Manager App](https://apoorvpindwar.github.io/project-5/)
 
-## Features
+## ✨ Features
 
-- 🔐 Secure Authentication with Magic Link
-- ✨ Beautiful and responsive UI with Tailwind CSS
-- 📝 Create, read, update, and delete tasks
-- 🔍 Search and filter tasks
-- 🎯 Task status management
-- 📅 Due date tracking
-- 🚀 Real-time updates
-- 🔒 Row Level Security with Supabase
+### Task Management
+- ➕ **Add Tasks**
+  - Create new tasks with title, description, and due date
+  - Automatic timestamp for creation date
+  - User-specific task creation
 
-## Tech Stack
+- 📝 **Edit Tasks**
+  - Update task title, description, and due date
+  - Real-time updates in the UI
+  - Maintain task history with updated timestamps
 
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Supabase
-- Framer Motion
-- React Hot Toast
+- ❌ **Delete Tasks**
+  - Remove tasks with confirmation dialog
+  - Permanent deletion with security checks
 
-## Prerequisites
+- ✅ **Mark Tasks**
+  - Toggle task completion status
+  - Visual indicators for completed tasks
+  - Filter tasks by completion status
 
-Before you begin, ensure you have the following installed:
-- Node.js (v18 or higher)
-- npm or yarn
-- A Supabase account and project
+### Additional Features
+- 🔍 Search functionality
+- 🔄 Real-time updates
+- 📱 Responsive design
+- 🎨 Modern UI with Tailwind CSS
+- 🔒 Secure authentication with Magic Links
+- 🎯 Task filtering and sorting
 
-## Environment Setup
+## 🚀 Running Locally
 
-1. Clone the repository
-2. Create a `.env` file in the root directory with the following variables:
+1. Clone the repository:
+```bash
+git clone https://github.com/Apoorvpindwar/project-5.git
+cd project-5
+```
 
+2. Install dependencies:
+```bash
+npm install --legacy-peer-deps
+```
+
+3. Create a `.env` file in the root directory:
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-## Installation
-
-1. Install dependencies:
-```bash
-npm install
-# or
-yarn install
-```
-
-2. Start the development server:
+4. Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-3. Build for production:
-```bash
-npm run build
-# or
-yarn build
-```
+5. Open [http://localhost:5173](http://localhost:5173) in your browser
 
-## API Endpoints
+## 🔗 API Documentation
 
-The application uses Supabase as its backend. Here are the available API endpoints and their payloads:
-
-### Authentication
+### Authentication Endpoints
 
 #### Sign In with Magic Link
 ```typescript
 POST auth/sign-in
-Payload:
-{
+Headers: {
+  Content-Type: application/json
+}
+Body: {
   email: string,
   options: {
     emailRedirectTo: string
   }
+}
+Response: {
+  user: null,
+  session: null
 }
 ```
 
 #### Sign Out
 ```typescript
 POST auth/sign-out
-No payload required
+Headers: {
+  Authorization: Bearer <token>
+}
+Response: {
+  error: null
+}
 ```
 
-### Tasks
+### Task Endpoints
 
 #### Get All Tasks
 ```typescript
 GET /rest/v1/tasks
-Headers:
-{
-  Authorization: 'Bearer user_token'
+Headers: {
+  Authorization: Bearer <token>
 }
-Response:
-[
+Response: [
   {
     id: uuid,
     user_id: uuid,
@@ -116,45 +119,51 @@ Response:
 #### Create Task
 ```typescript
 POST /rest/v1/tasks
-Headers:
-{
-  Authorization: 'Bearer user_token'
+Headers: {
+  Authorization: Bearer <token>
 }
-Payload:
-{
+Body: {
   title: string,
   description: string,
   due_date: string,
   completed: boolean
+}
+Response: {
+  id: uuid,
+  ...taskData
 }
 ```
 
 #### Update Task
 ```typescript
 PATCH /rest/v1/tasks?id=eq.{task_id}
-Headers:
-{
-  Authorization: 'Bearer user_token'
+Headers: {
+  Authorization: Bearer <token>
 }
-Payload:
-{
+Body: {
   title?: string,
   description?: string,
   due_date?: string,
   completed?: boolean
+}
+Response: {
+  id: uuid,
+  ...updatedTaskData
 }
 ```
 
 #### Delete Task
 ```typescript
 DELETE /rest/v1/tasks?id=eq.{task_id}
-Headers:
-{
-  Authorization: 'Bearer user_token'
+Headers: {
+  Authorization: Bearer <token>
+}
+Response: {
+  status: 204
 }
 ```
 
-## Database Schema
+## 📦 Database Schema
 
 ```sql
 CREATE TABLE tasks (
@@ -167,25 +176,60 @@ CREATE TABLE tasks (
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
+
+-- RLS Policies
+ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
+
+-- Read policy
+CREATE POLICY "Users can read own tasks"
+  ON tasks FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- Insert policy
+CREATE POLICY "Users can insert own tasks"
+  ON tasks FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- Update policy
+CREATE POLICY "Users can update own tasks"
+  ON tasks FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Delete policy
+CREATE POLICY "Users can delete own tasks"
+  ON tasks FOR DELETE
+  USING (auth.uid() = user_id);
 ```
 
-## Security
+## 📝 Database Dump
+Check [tasks_dump.sql](./supabase/migrations/20250516125654_violet_castle.sql) for the complete database schema and migrations.
 
-The application implements Row Level Security (RLS) through Supabase policies:
+## 🔧 Development Tools
+- Vite v5.0.0
+- TypeScript v5.2.2
+- React v18.2.0
+- Tailwind CSS v3.3.5
+- Supabase Client v2.39.0
 
-- Users can only read their own tasks
-- Users can only create tasks for themselves
-- Users can only update their own tasks
-- Users can only delete their own tasks
+## 🔐 Security
+- Row Level Security (RLS) enabled
+- User-specific data isolation
+- Secure authentication with Magic Links
+- Environment variables for sensitive data
 
-## Contributing
+## 📱 Responsive Design
+- Mobile-first approach
+- Tablet and desktop optimized
+- Fluid transitions and animations
+- Accessible UI components
 
+## 🤝 Contributing
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details. 
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 

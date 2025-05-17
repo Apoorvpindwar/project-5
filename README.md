@@ -35,6 +35,32 @@ A modern, responsive task management application built with React, TypeScript, a
 - 🔒 Secure authentication with Magic Links
 - 🎯 Task filtering and sorting
 
+## 📸 Screenshots
+
+### 🔐 Authentication Page
+Secure and user-friendly authentication using Magic Links. Simply enter your email address to receive a secure login link.
+
+![Authentication Page](docs/images/auth-page.png)
+
+### 📊 Dashboard
+Clean and intuitive dashboard displaying all your tasks. Features include:
+- Task status indicators
+- Due date display
+- Quick actions for edit and delete
+- Completion toggle
+- Search and filter options
+
+![Dashboard View](docs/images/dashboard.png)
+
+### ➕ Add Task Interface
+Streamlined task creation interface with:
+- Title and description fields
+- Due date picker
+- Real-time validation
+- Responsive design for all devices
+
+![Add Task Interface](docs/images/add-task.png)
+
 ## 🚀 Running Locally
 
 1. Clone the repository:
